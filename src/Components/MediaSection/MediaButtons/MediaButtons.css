@@ -1,0 +1,16 @@
+.media-buttons {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.media-icon:hover {
+  transform: scale(1.2);
+}
+
+.start:hover {
+  color: #00ff7d;
+}
+
+.stop:hover {
+  color: #ff5145;
+}

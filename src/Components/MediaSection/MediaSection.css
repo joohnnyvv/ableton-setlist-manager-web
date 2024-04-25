@@ -1,0 +1,7 @@
+.media-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #000000;
+  padding: 0px 16px 0px 16px;
+}
