@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./CuesList.css";
-import { Cue, MergedCue } from "../../Models/ApiModels";
+import { MergedCue } from "../../Models/ApiModels";
 import axios, { AxiosResponse } from "axios";
 import { API_URL, REST_ENDPOINTS, REST_PORT } from "../../Constants/ApiPaths";
 import {
@@ -10,6 +10,7 @@ import {
   ListItemAvatar,
   ListItemText,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import {
   DragDropContext,
@@ -25,12 +26,12 @@ interface CuesListProps {
   stopPlaying: () => Promise<AxiosResponse<any, any> | undefined>;
   startPlaying: () => Promise<void>;
   isPlaying: boolean;
-  handleSongChange: (cue: Cue) => Promise<AxiosResponse<any, any> | undefined>;
-  setSelectedSongIndex: (index: number) => void;
   selectedSongIndex: number;
 }
 
 export default function CuesList(props: CuesListProps) {
+  const [selectedSongProgress, setSelectedSongProgress] = useState(0);
+
   const reorder = (list: MergedCue[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -49,10 +50,9 @@ export default function CuesList(props: CuesListProps) {
       );
       await updateCues(newCues);
     }
-    console.log("cues", props.mergedCues);
   };
 
-  async function updateCues(newCues: MergedCue[]) {
+  const updateCues = async (newCues: MergedCue[]) => {
     try {
       await axios.post(`${API_URL}${REST_PORT}${REST_ENDPOINTS.UPDATE_CUES}`, {
         cues: newCues,
@@ -61,7 +61,7 @@ export default function CuesList(props: CuesListProps) {
     } catch (error) {
       console.error("Error updating cue order on server", error);
     }
-  }
+  };
 
   const toggleDoesStop = async (index: number) => {
     if (props.mergedCues) {
@@ -72,11 +72,7 @@ export default function CuesList(props: CuesListProps) {
   };
 
   const selectSong = async (index: number) => {
-    props.setSelectedSongIndex(index);
-    console.log(index);
-    if (props.mergedCues) {
-      await props.handleSongChange(props.mergedCues[index].song[0]);
-    }
+    handleSelectedSongIndexChange(index);
   };
 
   useEffect(() => {
@@ -95,20 +91,40 @@ export default function CuesList(props: CuesListProps) {
             mergedSong.song[1].time >= props.currentTime
           );
         });
-        props.setSelectedSongIndex(properIndex);
+        handleSelectedSongIndexChange(properIndex);
       }
     }
   }, [props.isPlaying]);
 
+  const handleSelectedSongIndexChange = async (index: number) => {
+    try {
+      const res = await axios.post(
+        `${API_URL}${REST_PORT}${REST_ENDPOINTS.SET_SELECTED_SONG_INDEX}`,
+        { newIndex: index }
+      );
+      return res;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const formatSongLengthInSec = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    const formattedMinutes = String(minutes).padStart(2, "0");
+    const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+    return `${formattedMinutes}:${formattedSeconds}`;
+  };
+
   return (
-    <div>
+    <div className="cues-list">
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="droppable-list">
           {(provided) => (
             <List
               ref={provided.innerRef}
               {...provided.droppableProps}
-              sx={{ border: "solid 1px black" }}
+              sx={{ border: "solid 1px black", width: 1 }}
               disablePadding
             >
               {props.mergedCues?.map((songCues: MergedCue, index: number) => (
@@ -124,20 +140,37 @@ export default function CuesList(props: CuesListProps) {
                       {...provided.dragHandleProps}
                       sx={{
                         backgroundColor:
-                          props.selectedSongIndex === index
-                            ? "#4a4a4a"
+                          props.selectedSongIndex === index &&
+                          !snapshot.isDragging
+                            ? "#003319"
                             : snapshot.isDragging
-                            ? "#888888"
+                            ? "#232323"
                             : "transparent",
-                        color: snapshot.isDragging ? "black" : "white",
+                        color: snapshot.isDragging ? "#a7a7a7" : "white",
                         border: "1px solid black",
+                        width: 1,
                       }}
                       onClick={() => selectSong(index)}
                     >
                       <ListItemAvatar>
                         <span>{index + 1}</span>
                       </ListItemAvatar>
-                      <ListItemText primary={songCues.song[0].name} />
+                      <ListItemText
+                        primary={songCues.song[0].name}
+                        secondary={
+                          songCues.additionalInfo
+                            ? songCues.additionalInfo.tempo
+                            : ""
+                        }
+                        secondaryTypographyProps={{ sx: { color: "#a7a7a7" } }}
+                      />
+                      {songCues.songLengthInSec ? (
+                        <Typography variant="subtitle1">
+                          {formatSongLengthInSec(songCues.songLengthInSec)}
+                        </Typography>
+                      ) : (
+                        ""
+                      )}
                       <Tooltip
                         title={`Do you want to stop after ${songCues.song[0].name} ends?`}
                         sx={{ marginLeft: "18px" }}

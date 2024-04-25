@@ -8,7 +8,7 @@ import {
   WS_PORT,
   WS_TYPES,
 } from "./Constants/ApiPaths";
-import { Cue, MergedCue } from "./Models/ApiModels";
+import { MergedCue } from "./Models/ApiModels";
 import Header from "./Components/Header/Header";
 import MediaSection from "./Components/MediaSection/MediaSection";
 import CuesList from "./Components/CuesList/CuesList";
@@ -40,22 +40,13 @@ function App() {
           case WS_TYPES.IS_PLAYING:
             setIsPlaying(data.isPlaying);
             break;
-          case WS_TYPES.PLAY_NEXT_CUE:
-            console.log(data);
-            console.log(mergedCues);
-            if (mergedCues) {
-              console.log("play next", data.cueIndex);
-              setSelectedSongIndex(data.cueIndex);
-              handleSongChange(mergedCues[data.cueIndex].song[0]);
-            }
+          case WS_TYPES.SELECTED_SONG_INDEX:
+            handleSelectedSongChange(data.index);
             break;
           case WS_TYPES.TEMPO:
             break;
           case WS_TYPES.IS_LOOPED:
             break;
-          // case WS_TYPES.STOP_PLAYBACK:
-          //   stopPlaying();
-          //   break;
         }
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
@@ -73,22 +64,8 @@ function App() {
       );
       const fetchedCues = response.data;
       setMergedCues(fetchedCues);
-      console.log(fetchedCues);
     } catch (error) {
       console.error("Error fetching cues:", error);
-    }
-  };
-
-  const handleSongChange = async (songCues: Cue) => {
-    console.log("change", songCues);
-    try {
-      const res = await axios.post(
-        `${API_URL}${REST_PORT}${REST_ENDPOINTS.SET_SELECTED_SONG}`,
-        songCues
-      );
-      return res;
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -97,7 +74,6 @@ function App() {
       const res = await axios.get(
         `${API_URL}${REST_PORT}${REST_ENDPOINTS.STOP_PLAYING}`
       );
-      console.log("stopped");
       return res;
     } catch (error) {
       console.error(error);
@@ -131,8 +107,6 @@ function App() {
         stopPlaying={stopPlaying}
         startPlaying={startPlaying}
         isPlaying={isPlaying}
-        handleSongChange={handleSongChange}
-        setSelectedSongIndex={handleSelectedSongChange}
         selectedSongIndex={selectedSongIndex}
       />
     </div>

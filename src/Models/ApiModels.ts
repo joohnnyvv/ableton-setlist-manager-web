@@ -5,8 +5,14 @@ export interface Cue
         time: number,
     }
 
+    export interface AdditionalInfo {
+        tempo: string;
+    }
+
     export interface MergedCue {
         song: Cue[],
         doesStop: boolean,
-        songLength: number
+        additionalInfo?:AdditionalInfo,
+        songLengthInBars: number,
+        songLengthInSec?: number
     }

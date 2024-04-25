@@ -9,14 +9,14 @@ export const REST_ENDPOINTS = {
     SET_SELECTED_SONG: '/send-cue',
     UPDATE_CUES: '/update-cues',
     SET_LOOP_AREA: '/set-loop-area',
-    SET_IS_LOOPED: '/set-is-looped'
+    SET_IS_LOOPED: '/set-is-looped',
+    SET_SELECTED_SONG_INDEX: '/set-selected-song-index'
 }
 
 export const WS_TYPES = {
     IS_PLAYING: 'is_playing',
     CURRENT_TIME: 'song_time',
-    PLAY_NEXT_CUE: 'play_next_cue',
-    STOP_PLAYBACK: 'stop_playback',
+    SELECTED_SONG_INDEX: 'selected_song_index',
     TEMPO: 'tempo',
     IS_LOOPED: 'is_looped'
 }
