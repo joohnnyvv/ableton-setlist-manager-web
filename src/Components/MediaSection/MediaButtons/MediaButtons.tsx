@@ -2,6 +2,7 @@ import React from "react";
 import "./MediaButtons.css";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SquareIcon from "@mui/icons-material/Square";
+import { Repeat } from "@mui/icons-material";
 
 interface MediaButtonsProps {
   isPlaying: boolean;
@@ -22,6 +23,7 @@ export default function MediaButtons(props: MediaButtonsProps) {
         fontSize="medium"
         className="media-icon stop"
       />
+      <Repeat fontSize="medium" className="media-icon loop" />
     </div>
   );
 }

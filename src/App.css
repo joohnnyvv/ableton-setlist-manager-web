@@ -6,3 +6,17 @@
   align-items: center;
   padding: 10px 0 10px 0;
 }
+
+.header-wrapper {
+  z-index: 9;
+  width: calc(100% - 100px);
+  position: sticky;
+  margin-top: -10px;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #232323;
+  padding: 5px 50px 5px 50px;
+  box-shadow: 6px 3px 4px 1px black;
+}

@@ -60,27 +60,6 @@ export default function CuesList(props: CuesListProps) {
     handleSelectedSongIndexChange(index);
   };
 
-  useEffect(() => {
-    if (props.isPlaying && props.mergedCues) {
-      const currentSongTimes = [
-        props.mergedCues[props.selectedSongIndex].song[0].time,
-        props.mergedCues[props.selectedSongIndex].song[1].time,
-      ];
-      if (
-        props.currentTime > currentSongTimes[1] ||
-        props.currentTime < currentSongTimes[0]
-      ) {
-        const properIndex = props.mergedCues.findIndex((mergedSong) => {
-          return (
-            mergedSong.song[0].time <= props.currentTime &&
-            mergedSong.song[1].time >= props.currentTime
-          );
-        });
-        handleSelectedSongIndexChange(properIndex);
-      }
-    }
-  }, [props.isPlaying]);
-
   const handleSelectedSongIndexChange = async (index: number) => {
     try {
       const res = await axios.post(

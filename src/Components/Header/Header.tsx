@@ -1,10 +1,11 @@
 import React from "react";
 import "./Header.css";
+import { Typography } from "@mui/material";
 
 export default function Header() {
   return (
     <div className="header">
-      <h1>Ableton Setlist Manager</h1>
+      <Typography variant="h6">Ableton Setlist Manager</Typography>
     </div>
   );
 }

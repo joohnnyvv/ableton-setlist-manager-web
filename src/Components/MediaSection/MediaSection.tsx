@@ -25,13 +25,15 @@ export default function MediaSection(props: MediaSectionProps) {
 
   return (
     <div className="media-section">
-      <div>
+      <div className="media-box">
         <p>{props.currentTime.toFixed(0)}</p>
       </div>
-      <MediaButtons
-        isPlaying={props.isPlaying}
-        handleClick={handleStartStopClick}
-      />
+      <div className="media-box">
+        <MediaButtons
+          isPlaying={props.isPlaying}
+          handleClick={handleStartStopClick}
+        />
+      </div>
     </div>
   );
 }

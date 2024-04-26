@@ -91,8 +91,8 @@ export default function CuesListItem(props: CuesListItemProps) {
           <Collapse in={isOpen} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               {props.songCues.songPartsCues.map((part, index) => (
-                <Paper sx={{ backgroundColor: "rgba(0, 0, 0, 0.70)" }}>
-                  <ListItem key={index} sx={{ color: "#d3d3d3" }}>
+                <Paper sx={{ backgroundColor: "black" }}>
+                  <ListItem key={index} sx={{ color: "#888888" }}>
                     <ListItemText primary={part.name} />
                   </ListItem>
                 </Paper>

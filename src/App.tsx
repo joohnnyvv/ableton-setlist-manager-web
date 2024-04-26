@@ -96,13 +96,15 @@ function App() {
 
   return (
     <div className="app">
-      <Header />
-      <MediaSection
-        currentTime={currentTime}
-        isPlaying={isPlaying}
-        stopPlaying={stopPlaying}
-        startPlaying={startPlaying}
-      />
+      <div className="header-wrapper">
+        <Header />
+        <MediaSection
+          currentTime={currentTime}
+          isPlaying={isPlaying}
+          stopPlaying={stopPlaying}
+          startPlaying={startPlaying}
+        />
+      </div>
       <CuesList
         setMergedCues={handleCuesChange}
         mergedCues={mergedCues}
