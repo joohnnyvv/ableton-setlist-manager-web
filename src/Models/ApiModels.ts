@@ -11,6 +11,7 @@ export interface Cue
 
     export interface MergedCue {
         song: Cue[],
+        songPartsCues: Cue[],
         doesStop: boolean,
         additionalInfo?:AdditionalInfo,
         songLengthInBars: number,

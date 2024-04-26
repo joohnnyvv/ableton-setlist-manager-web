@@ -18,5 +18,6 @@ export const WS_TYPES = {
     CURRENT_TIME: 'song_time',
     SELECTED_SONG_INDEX: 'selected_song_index',
     TEMPO: 'tempo',
-    IS_LOOPED: 'is_looped'
+    IS_LOOPED: 'is_looped',
+    CUES_UPDATED: 'cues_updated'
 }

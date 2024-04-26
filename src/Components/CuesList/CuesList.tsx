@@ -1,25 +1,13 @@
-import React, { useEffect, useState } from "react";
-import "./CuesList.css";
-import { MergedCue } from "../../Models/ApiModels";
+import { List, Paper } from "@mui/material";
 import axios, { AxiosResponse } from "axios";
+import { useEffect } from "react";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import { API_URL, REST_ENDPOINTS, REST_PORT } from "../../Constants/ApiPaths";
-import {
-  Checkbox,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Tooltip,
-  Typography,
-} from "@mui/material";
-import {
-  DragDropContext,
-  Draggable,
-  Droppable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { MergedCue } from "../../Models/ApiModels";
+import "./CuesList.css";
+import CuesListItem from "./CuesListItem/CuesListItem";
 
-interface CuesListProps {
+export interface CuesListProps {
   mergedCues: MergedCue[];
   setMergedCues: (cues: MergedCue[]) => void;
   currentTime: number;
@@ -30,8 +18,6 @@ interface CuesListProps {
 }
 
 export default function CuesList(props: CuesListProps) {
-  const [selectedSongProgress, setSelectedSongProgress] = useState(0);
-
   const reorder = (list: MergedCue[], startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -57,7 +43,6 @@ export default function CuesList(props: CuesListProps) {
       await axios.post(`${API_URL}${REST_PORT}${REST_ENDPOINTS.UPDATE_CUES}`, {
         cues: newCues,
       });
-      props.setMergedCues(newCues);
     } catch (error) {
       console.error("Error updating cue order on server", error);
     }
@@ -124,67 +109,20 @@ export default function CuesList(props: CuesListProps) {
             <List
               ref={provided.innerRef}
               {...provided.droppableProps}
-              sx={{ border: "solid 1px black", width: 1 }}
+              sx={{ width: 1 }}
               disablePadding
             >
               {props.mergedCues?.map((songCues: MergedCue, index: number) => (
-                <Draggable
-                  key={songCues.song[0].id}
-                  draggableId={songCues.song[0].id}
+                <CuesListItem
+                  songCues={songCues}
                   index={index}
-                >
-                  {(provided, snapshot) => (
-                    <ListItem
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      sx={{
-                        backgroundColor:
-                          props.selectedSongIndex === index &&
-                          !snapshot.isDragging
-                            ? "#003319"
-                            : snapshot.isDragging
-                            ? "#232323"
-                            : "transparent",
-                        color: snapshot.isDragging ? "#a7a7a7" : "white",
-                        border: "1px solid black",
-                        width: 1,
-                      }}
-                      onClick={() => selectSong(index)}
-                    >
-                      <ListItemAvatar>
-                        <span>{index + 1}</span>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={songCues.song[0].name}
-                        secondary={
-                          songCues.additionalInfo
-                            ? songCues.additionalInfo.tempo
-                            : ""
-                        }
-                        secondaryTypographyProps={{ sx: { color: "#a7a7a7" } }}
-                      />
-                      {songCues.songLengthInSec ? (
-                        <Typography variant="subtitle1">
-                          {formatSongLengthInSec(songCues.songLengthInSec)}
-                        </Typography>
-                      ) : (
-                        ""
-                      )}
-                      <Tooltip
-                        title={`Do you want to stop after ${songCues.song[0].name} ends?`}
-                        sx={{ marginLeft: "18px" }}
-                      >
-                        <Checkbox
-                          onChange={() => toggleDoesStop(index)}
-                          checked={songCues.doesStop}
-                          color="error"
-                        />
-                      </Tooltip>
-                    </ListItem>
-                  )}
-                </Draggable>
+                  cuesListItemProps={props}
+                  selectSong={selectSong}
+                  formatSongLengthInSec={formatSongLengthInSec}
+                  toggleDoesStop={toggleDoesStop}
+                />
               ))}
+              {provided.placeholder}
             </List>
           )}
         </Droppable>

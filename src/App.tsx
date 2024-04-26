@@ -47,6 +47,9 @@ function App() {
             break;
           case WS_TYPES.IS_LOOPED:
             break;
+          case WS_TYPES.CUES_UPDATED:
+            setMergedCues(data.cues);
+            break;
         }
       } catch (error) {
         console.error("Error parsing WebSocket message:", error);
