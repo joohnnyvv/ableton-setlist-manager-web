@@ -1,46 +1,66 @@
-# Getting Started with Create React App
+# Ableton Setlist Manager (Web)
+![Screenshot 2024-04-28 at 00 56 22](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/d1b34552-10fa-44be-b2ec-6d13b8abcaf3)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
 
-## Available Scripts
+The Ableton Setlist Manager is a [React](https://github.com/facebook/react)-based client application designed to work in tandem with the [Setlist Management Server](https://github.com/joohnnyvv/setlist-mgmt-server) for managing setlists and controlling playback in Ableton Live. It provides an intuitive user interface for interacting with Ableton Live and accessing real-time updates through WebSocket communication.
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- **Fetching and displaying** cue points from Ableton Live sets.
+- **Controlling** playback in Ableton Live.
+- **Updating** cue order.
+- **Setting** loop areas.
+- **Selecting** songs and parts for playback.
+- **Toggling** loop mode.
+- **Real-time** updates for song time, playback status, tempo changes, loop mode, and song/part progress.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Tech Stack
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- [**React**](https://github.com/facebook/react): Frontend library for building user interfaces.
+- [**Material-UI (MUI)**](https://mui.com/): React component library for UI design.
+- **WebSocket**: Enables real-time communication with the Setlist Management Server.
+- [**Axios**](https://github.com/axios/axios): HTTP client for making requests to the server.
 
-### `npm test`
+## Run Locally
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+1. **Clone the repository**: `git clone https://github.com/joohnnyvv/ableton-setlist-manager-web`
+2. **Navigate to the project directory**: `cd ableton-setlist-manager-web`
+3. **Install dependencies**: `npm install`
+4. **Run [server](https://github.com/joohnnyvv/setlist-mgmt-server)**
+5. **Start the development server**: `npm start`
+6. **Access the application in your browser at**: [http://localhost:3000](http://localhost:3000)
 
-### `npm run build`
+## Usage/Examples
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Browse and select cue points from the fetched setlist.**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+![Screenshot 2024-04-28 at 00 58 17](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/12ed6b8a-c805-4d7b-a5a8-912db0b1e9e7)
+ 
+2. **Control playback by starting, stopping and looping**
+ 
+![Screenshot 2024-04-28 at 00 59 59](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/c3a970a7-b3c4-4e5c-93eb-87ca3c8b226d)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. **Update cue order as needed.**
 
-### `npm run eject`
+![Screenshot 2024-04-28 at 01 01 12](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/17866093-763c-4426-b868-c770722c86c3)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+4. **Set loop areas for selected sections of songs or whole songs.**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![Screenshot 2024-04-28 at 01 02 28](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/8afaef07-1072-481d-aa18-40e3951b1ff1)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+5. **Select songs and parts for playback.**
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![Screenshot 2024-04-28 at 01 03 48](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/bdbb7735-6940-4691-87e2-ae975057378c)
 
-## Learn More
+6. **Decide whether you want to continue playback after the song ends**
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+![Screenshot 2024-04-28 at 01 04 18](https://github.com/joohnnyvv/ableton-setlist-manager-web/assets/110868938/be497b49-5030-4638-a8bf-babbc15d6707)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Authors
+
+- [@joohnnyvv](https://github.com/joohnnyvv)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/joohnnyvv/ableton-setlist-manager-web/blob/master/LICENSE.MD) file for details.
