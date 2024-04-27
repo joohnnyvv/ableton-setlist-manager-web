@@ -5,15 +5,24 @@ export interface Cue
         time: number,
     }
 
+    export interface PartCue extends Cue {
+        length: number
+    }
+
     export interface AdditionalInfo {
         tempo: string;
     }
 
     export interface MergedCue {
         song: Cue[],
-        songPartsCues: Cue[],
+        songPartsCues: PartCue[],
         doesStop: boolean,
         additionalInfo?:AdditionalInfo,
         songLengthInBars: number,
         songLengthInSec?: number
+    }
+
+    export interface LoopReqBody {
+        loopStart: number,
+        loopLength: number
     }

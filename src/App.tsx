@@ -8,7 +8,7 @@ import {
   WS_PORT,
   WS_TYPES,
 } from "./Constants/ApiPaths";
-import { MergedCue } from "./Models/ApiModels";
+import { LoopReqBody, MergedCue } from "./Models/ApiModels";
 import Header from "./Components/Header/Header";
 import MediaSection from "./Components/MediaSection/MediaSection";
 import CuesList from "./Components/CuesList/CuesList";
@@ -18,13 +18,14 @@ function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [mergedCues, setMergedCues] = useState<MergedCue[]>([]);
   const [selectedSongIndex, setSelectedSongIndex] = useState(-1);
+  const [selectedPartIndex, setSelectedPartIndex] = useState(-1);
+  const [currentTempo, setCurrentTempo] = useState(0);
+  const [isLooped, setIsLooped] = useState(false);
+  const [currentSongProgress, setCurrentSongProgress] = useState(0);
+  const [currentPartProgress, setCurrentPartProgress] = useState(0);
 
   const handleCuesChange = (cues: MergedCue[]) => {
     setMergedCues(cues);
-  };
-
-  const handleSelectedSongChange = (index: number) => {
-    setSelectedSongIndex(index);
   };
 
   useEffect(() => {
@@ -41,14 +42,25 @@ function App() {
             setIsPlaying(data.isPlaying);
             break;
           case WS_TYPES.SELECTED_SONG_INDEX:
-            handleSelectedSongChange(data.index);
+            setSelectedSongIndex(data.songIndex);
+            break;
+          case WS_TYPES.SELECTED_PART_INDEX:
+            setSelectedPartIndex(data.partIndex);
             break;
           case WS_TYPES.TEMPO:
+            setCurrentTempo(data.tempo);
             break;
           case WS_TYPES.IS_LOOPED:
+            setIsLooped(data.isLooped);
             break;
           case WS_TYPES.CUES_UPDATED:
             setMergedCues(data.cues);
+            break;
+          case WS_TYPES.SONG_PROGRESS:
+            setCurrentSongProgress(data.songProgress);
+            break;
+          case WS_TYPES.PART_PROGRESS:
+            setCurrentPartProgress(data.partProgress);
             break;
         }
       } catch (error) {
@@ -89,6 +101,39 @@ function App() {
       console.error(error);
     }
   };
+  const toggleLoop = async () => {
+    let loopStart;
+    let loopLength;
+
+    if (!isLooped) {
+      if (selectedPartIndex === -1) {
+        const selectedSong = mergedCues[selectedSongIndex].song[0];
+        loopStart = selectedSong.time;
+        loopLength = mergedCues[selectedSongIndex].songLengthInBars;
+      } else {
+        const selectedPart =
+          mergedCues[selectedSongIndex].songPartsCues[selectedPartIndex];
+        loopStart = selectedPart.time;
+        loopLength = selectedPart.length;
+      }
+      try {
+        await axios.post(
+          `${API_URL}${REST_PORT}${REST_ENDPOINTS.SET_LOOP_AREA}`,
+          {
+            loopStart,
+            loopLength,
+          }
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    try {
+      await axios.get(`${API_URL}${REST_PORT}${REST_ENDPOINTS.SET_IS_LOOPED}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     fetchCues();
@@ -103,6 +148,9 @@ function App() {
           isPlaying={isPlaying}
           stopPlaying={stopPlaying}
           startPlaying={startPlaying}
+          currentTempo={currentTempo}
+          isLooped={isLooped}
+          toggleLoop={toggleLoop}
         />
       </div>
       <CuesList
@@ -113,6 +161,9 @@ function App() {
         startPlaying={startPlaying}
         isPlaying={isPlaying}
         selectedSongIndex={selectedSongIndex}
+        selectedPartIndex={selectedPartIndex}
+        currentPartProgress={currentPartProgress}
+        currentSongProgress={currentSongProgress}
       />
     </div>
   );

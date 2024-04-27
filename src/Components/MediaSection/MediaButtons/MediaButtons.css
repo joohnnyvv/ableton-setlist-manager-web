@@ -8,7 +8,7 @@
 }
 
 .start:hover {
-  color: #00ff7d;
+  color: #00ff7d !important;
 }
 
 .stop:hover {
@@ -16,5 +16,5 @@
 }
 
 .loop:hover {
-  color: #ffb506;
+  color: #ffb506 !important;
 }

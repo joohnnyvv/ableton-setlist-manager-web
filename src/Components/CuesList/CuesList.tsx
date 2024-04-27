@@ -15,6 +15,9 @@ export interface CuesListProps {
   startPlaying: () => Promise<void>;
   isPlaying: boolean;
   selectedSongIndex: number;
+  selectedPartIndex: number;
+  currentSongProgress: number;
+  currentPartProgress: number;
 }
 
 export default function CuesList(props: CuesListProps) {
@@ -48,7 +51,11 @@ export default function CuesList(props: CuesListProps) {
     }
   };
 
-  const toggleDoesStop = async (index: number) => {
+  const toggleDoesStop = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    e.stopPropagation();
     if (props.mergedCues) {
       const updatedPairs = [...props.mergedCues];
       updatedPairs[index].doesStop = !updatedPairs[index].doesStop;
@@ -56,15 +63,18 @@ export default function CuesList(props: CuesListProps) {
     }
   };
 
-  const selectSong = async (index: number) => {
-    handleSelectedSongIndexChange(index);
+  const selectSong = async (songIndex: number, partIndex: number) => {
+    handleSelectedSongIndexChange(songIndex, partIndex);
   };
 
-  const handleSelectedSongIndexChange = async (index: number) => {
+  const handleSelectedSongIndexChange = async (
+    songIndex: number,
+    partIndex: number
+  ) => {
     try {
       const res = await axios.post(
         `${API_URL}${REST_PORT}${REST_ENDPOINTS.SET_SELECTED_SONG_INDEX}`,
-        { newIndex: index }
+        { songIndex: songIndex, partIndex: partIndex }
       );
       return res;
     } catch (error) {
@@ -93,12 +103,14 @@ export default function CuesList(props: CuesListProps) {
             >
               {props.mergedCues?.map((songCues: MergedCue, index: number) => (
                 <CuesListItem
+                  key={index}
                   songCues={songCues}
-                  index={index}
+                  songListItemIndex={index}
                   cuesListItemProps={props}
                   selectSong={selectSong}
                   formatSongLengthInSec={formatSongLengthInSec}
                   toggleDoesStop={toggleDoesStop}
+                  selectedPartIndex={props.selectedPartIndex}
                 />
               ))}
               {provided.placeholder}

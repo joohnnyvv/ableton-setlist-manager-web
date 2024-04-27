@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import "./MediaSection.css";
+import { AxiosResponse } from "axios";
 import MediaButtons from "./MediaButtons/MediaButtons";
-import { Cue } from "../../Models/ApiModels";
-import { API_URL, REST_ENDPOINTS, REST_PORT } from "../../Constants/ApiPaths";
-import axios, { AxiosResponse } from "axios";
+import "./MediaSection.css";
 
 interface MediaSectionProps {
   isPlaying: boolean;
   currentTime: number;
   stopPlaying: () => Promise<AxiosResponse<any, any> | undefined>;
   startPlaying: () => Promise<void>;
+  currentTempo: number;
+  isLooped: boolean;
+  toggleLoop: () => Promise<void>;
 }
 
 export default function MediaSection(props: MediaSectionProps) {
@@ -26,12 +26,17 @@ export default function MediaSection(props: MediaSectionProps) {
   return (
     <div className="media-section">
       <div className="media-box">
+        <p>{props.currentTempo * 2} BPM</p>
+      </div>
+      <div className="media-box">
         <p>{props.currentTime.toFixed(0)}</p>
       </div>
       <div className="media-box">
         <MediaButtons
           isPlaying={props.isPlaying}
+          isLooped={props.isLooped}
           handleClick={handleStartStopClick}
+          toggleLoop={props.toggleLoop}
         />
       </div>
     </div>
